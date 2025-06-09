@@ -13,7 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup Python
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
@@ -22,10 +22,14 @@ jobs:
       run: |
         pip install -r requirements.txt
 
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: insurance-api-xyz
         slot-name: production
-        username: ${{ secrets.AZURE_WEBAPP_USERNAME }}
-        password: ${{ secrets.AZURE_WEBAPP_PASSWORD }}
+        package: .
